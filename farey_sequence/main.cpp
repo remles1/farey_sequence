@@ -1,15 +1,37 @@
 #include <iostream>
 #include <vector>
+#include <string>
+#include <sstream>
 using namespace std;
 
 vector<int64_t> farey(double n, int iter) {
-	bool is_positive = 1;
+	int sign = 1;
 	if (n < 0) {
-		is_positive = 0;
+		sign = -1;
 	}
 
-	int64_t before_decimal = (int64_t)n;
-	double after_decimal = abs(n - before_decimal);
+	string n_str = to_string(n);
+	string before_decimal_str = "";
+	string after_decimal_str = "0";
+	bool passed_dot = 0;
+
+	for (int i = 0; i < n_str.length(); i++) {
+		if (n_str[i] == '.') {
+			passed_dot = 1;
+		};
+		if (!passed_dot) {
+			before_decimal_str.push_back(n_str[i]);
+		}
+		else {
+			after_decimal_str.push_back(n_str[i]);
+		}
+	}
+
+	int64_t before_decimal = stoll(before_decimal_str);
+	double after_decimal = stod(after_decimal_str);
+	if (after_decimal == 0) {
+		return { (int64_t)n,1 };
+	}
 	before_decimal = abs(before_decimal);
 
 	int64_t a = 0; // 
@@ -24,7 +46,7 @@ vector<int64_t> farey(double n, int iter) {
 	for (int i = 0; i < iter; i++) {
 		pivot_a = a + c;
 		pivot_b = b + d;
-		double pivot = (double)pivot_a / pivot_b;
+		double pivot = static_cast<double>(pivot_a) / pivot_b;
 		if (after_decimal > pivot) {
 			a = pivot_a;
 			b = pivot_b;
@@ -35,16 +57,10 @@ vector<int64_t> farey(double n, int iter) {
 		}
 	}
 
-	if (is_positive) {
-		return {pivot_a + before_decimal * pivot_b,pivot_b};
-	}
-	else {
-		return { -1 * (pivot_a + before_decimal * pivot_b),pivot_b };
-	}
-	
+	return {sign*(pivot_a + before_decimal * pivot_b),pivot_b};
 }
 
 int main() {
-	vector<int64_t> f = farey(-206500.153123138979,1000);
+	vector<int64_t> f = farey(-32.7382, 1000);
 	cout << f[0] << "/" << f[1];
 }
