@@ -43,8 +43,7 @@ vector<int64_t> farey(double n, int iter) {
 	int64_t pivot_b = b + d;
 
 	for (int i = 0; i < iter; i++) {
-		pivot_a = a + c;
-		pivot_b = b + d;
+		
 		double pivot = (double)pivot_a / pivot_b;
 		if (after_decimal > pivot) {
 			a = pivot_a;
@@ -54,13 +53,14 @@ vector<int64_t> farey(double n, int iter) {
 			c = pivot_a;
 			d = pivot_b;
 		}
-		
+		pivot_a = a + c;
+		pivot_b = b + d;
 	}
 
-	return {sign*(pivot_a + before_decimal * pivot_b),pivot_b};
+	return { sign * (pivot_a + before_decimal * pivot_b),pivot_b };
 }
 
 int main() {
-	vector<int64_t> f = farey(-2.5, 1000);
+	vector<int64_t> f = farey(3.1415, 1000);
 	cout << f[0] << "/" << f[1];
 }
